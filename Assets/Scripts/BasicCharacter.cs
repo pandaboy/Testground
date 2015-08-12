@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
+using MonoGraph;
 using System.Collections;
-using RelationshipGraph;
 
-public class BasicRGUse : MonoBehaviour {
-
-    public EntityType entityType;
-    public RelationshipType relationshipType;
-
+public class BasicCharacter : Entity
+{
+    public override void Awake()
+    {
+        base.Awake();
+    }
 	// Use this for initialization
 	void Start () {
-	
 	}
 	
 	// Update is called once per frame
