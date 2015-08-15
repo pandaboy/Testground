@@ -76,8 +76,15 @@ public class SteeringBehaviours
         return (desiredV - rigidbody.velocity);
     }
 
-    public Vector3 Flee()
+    public Vector3 Flee(float panicDistance = 10.0f)
     {
+        // only flee if enemy within radius
+        panicDistance *= panicDistance;
+
+        // if we're far enough away, no reason to panic
+        if ((rigidbody.position - target).sqrMagnitude > panicDistance)
+            return Vector3.zero;
+
         Vector3 desiredV = (rigidbody.position - target).normalized * vehicle.maxSpeed;
 
         return (desiredV - rigidbody.velocity);
