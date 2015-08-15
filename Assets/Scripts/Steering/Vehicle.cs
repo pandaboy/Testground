@@ -7,6 +7,7 @@ public class Vehicle : MovingEntity {
     private Rigidbody rb;
 
     public Transform target;
+    public BehaviourType behaviourType = BehaviourType.ARRIVE;
 
 	// Use this for initialization
 	void Start ()

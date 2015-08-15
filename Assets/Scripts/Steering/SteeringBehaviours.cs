@@ -11,6 +11,13 @@ public enum BehaviourType
     PURSUIT = 8
 }
 
+public enum Deceleration
+{
+    FAST = 1,
+    MEDIUM,
+    SLOW
+}
+
 public class SteeringBehaviours
 {
     // reference to the vehicle to be moved
@@ -18,7 +25,7 @@ public class SteeringBehaviours
     private Vector3 steeringForce;
     private Vector3 target;
     private Rigidbody rigidbody;
-    private BehaviourType behaviourType = BehaviourType.FLEE;
+    private BehaviourType behaviourType = BehaviourType.ARRIVE;
 
     public SteeringBehaviours(Vehicle vehicle)
     {
@@ -26,6 +33,7 @@ public class SteeringBehaviours
         rigidbody = this.vehicle.GetComponent<Rigidbody>();
         // retrieve the target from the vehicle settings
         target = this.vehicle.target.position;
+        BehaviourType = this.vehicle.behaviourType;
     }
 
     public bool On(BehaviourType type)
@@ -66,6 +74,14 @@ public class SteeringBehaviours
                 return steeringForce;
         }
 
+        if (On(BehaviourType.ARRIVE))
+        {
+            Vector3 force = Arrive(Deceleration.FAST);
+
+            if (!AccumulateForce(force))
+                return steeringForce;
+        }
+
         return steeringForce;
     }
 
@@ -88,6 +104,26 @@ public class SteeringBehaviours
         Vector3 desiredV = (rigidbody.position - target).normalized * vehicle.maxSpeed;
 
         return (desiredV - rigidbody.velocity);
+    }
+
+    public Vector3 Arrive(Deceleration deceleration)
+    {
+        Vector3 toTarget = target - rigidbody.position;
+
+        float distToTarget = toTarget.magnitude;
+
+        if(distToTarget > 0)
+        {
+            float speed = distToTarget / (int)deceleration;
+
+            Mathf.Clamp(speed, 0, vehicle.maxSpeed);
+
+            Vector3 desiredV = toTarget * (speed / distToTarget);
+
+            return desiredV - rigidbody.velocity;
+        }
+
+        return Vector3.zero;
     }
 
     public bool AccumulateForce(Vector3 forceToAdd)

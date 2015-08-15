@@ -137,6 +137,7 @@ MonoBehaviour:
   maxForce: 10
   turnRate: 10
   target: {fileID: 1672245404}
+  behaviourType: 4
 --- !u!23 &94479042
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -224,10 +225,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dc1076ade5ac4841a56ffdec45f4dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 10
+  maxSpeed: 50
   maxForce: 10
   turnRate: 10
   target: {fileID: 1672245404}
+  behaviourType: 4
 --- !u!54 &123062466
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -333,6 +335,7 @@ MonoBehaviour:
   maxForce: 5
   turnRate: 5
   target: {fileID: 2098917622}
+  behaviourType: 2
 --- !u!54 &210291738
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -683,6 +686,7 @@ MonoBehaviour:
   maxForce: 5
   turnRate: 5
   target: {fileID: 1672245404}
+  behaviourType: 4
 --- !u!54 &2098917618
 Rigidbody:
   m_ObjectHideFlags: 0
