@@ -76,7 +76,7 @@ public class SteeringBehaviours
 
         if (On(BehaviourType.ARRIVE))
         {
-            Vector3 force = Arrive(Deceleration.FAST);
+            Vector3 force = Arrive(Deceleration.MEDIUM);
 
             if (!AccumulateForce(force))
                 return steeringForce;
@@ -114,9 +114,11 @@ public class SteeringBehaviours
 
         if(distToTarget > 0)
         {
-            float speed = distToTarget / (int)deceleration;
+            const float decelerationTweaker = 0.3f;
 
-            Mathf.Clamp(speed, 0, vehicle.maxSpeed);
+            float speed = distToTarget / ((float)deceleration * decelerationTweaker);
+
+            Mathf.Min(speed, vehicle.maxSpeed);
 
             Vector3 desiredV = toTarget * (speed / distToTarget);
 
