@@ -3,6 +3,14 @@ using System.Collections;
 
 public class MovingEntity : MonoBehaviour
 {
+    public Vector3 Position
+    {
+        get
+        {
+            return transform.position;
+        }
+    }
+
     protected Vector3 velocity;
     public Vector3 Velocity
     {
@@ -14,6 +22,22 @@ public class MovingEntity : MonoBehaviour
         set
         {
             velocity = value;
+        }
+    }
+
+    public float Speed
+    {
+        get
+        {
+            return velocity.magnitude;
+        }
+    }
+
+    public float SpeedSquared
+    {
+        get
+        {
+            return velocity.sqrMagnitude;
         }
     }
 

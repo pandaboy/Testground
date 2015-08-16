@@ -26,6 +26,7 @@ public class SteeringBehaviours
     private Vector3 target;
     private Rigidbody rigidbody;
     private BehaviourType behaviourType = BehaviourType.ARRIVE;
+    private Vehicle pursuitVehicle = null;
 
     public SteeringBehaviours(Vehicle vehicle)
     {
@@ -34,6 +35,9 @@ public class SteeringBehaviours
         // retrieve the target from the vehicle settings
         target = this.vehicle.target.position;
         BehaviourType = this.vehicle.behaviourType;
+        
+        if(this.vehicle.pursuit != null)
+            pursuitVehicle = this.vehicle.pursuit.GetComponent<Vehicle>();
     }
 
     public bool On(BehaviourType type)
@@ -60,7 +64,7 @@ public class SteeringBehaviours
 
         if(On(BehaviourType.SEEK))
         {
-            Vector3 force = Seek();
+            Vector3 force = Seek(target);
 
             if (!AccumulateForce(force))
                 return steeringForce;
@@ -68,7 +72,7 @@ public class SteeringBehaviours
 
         if (On(BehaviourType.FLEE))
         {
-            Vector3 force = Flee();
+            Vector3 force = Flee(target);
 
             if (!AccumulateForce(force))
                 return steeringForce;
@@ -76,7 +80,15 @@ public class SteeringBehaviours
 
         if (On(BehaviourType.ARRIVE))
         {
-            Vector3 force = Arrive(Deceleration.MEDIUM);
+            Vector3 force = Arrive(target, Deceleration.MEDIUM);
+
+            if (!AccumulateForce(force))
+                return steeringForce;
+        }
+
+        if(On(BehaviourType.PURSUIT))
+        {
+            Vector3 force = Pursuit(pursuitVehicle);
 
             if (!AccumulateForce(force))
                 return steeringForce;
@@ -85,30 +97,30 @@ public class SteeringBehaviours
         return steeringForce;
     }
 
-    public Vector3 Seek()
+    public Vector3 Seek(Vector3 targetPosition)
     {
-        Vector3 desiredV = (target - rigidbody.position).normalized * vehicle.maxSpeed;
+        Vector3 desiredV = (targetPosition - rigidbody.position).normalized * vehicle.maxSpeed;
 
         return (desiredV - rigidbody.velocity);
     }
 
-    public Vector3 Flee(float panicDistance = 10.0f)
+    public Vector3 Flee(Vector3 targetPosition, float panicDistance = 10.0f)
     {
         // only flee if enemy within radius
         panicDistance *= panicDistance;
 
         // if we're far enough away, no reason to panic
-        if ((rigidbody.position - target).sqrMagnitude > panicDistance)
+        if ((rigidbody.position - targetPosition).sqrMagnitude > panicDistance)
             return Vector3.zero;
 
-        Vector3 desiredV = (rigidbody.position - target).normalized * vehicle.maxSpeed;
+        Vector3 desiredV = (rigidbody.position - targetPosition).normalized * vehicle.maxSpeed;
 
         return (desiredV - rigidbody.velocity);
     }
 
-    public Vector3 Arrive(Deceleration deceleration)
+    public Vector3 Arrive(Vector3 targetPosition, Deceleration deceleration)
     {
-        Vector3 toTarget = target - rigidbody.position;
+        Vector3 toTarget = targetPosition - rigidbody.position;
 
         float distToTarget = toTarget.magnitude;
 
@@ -126,6 +138,24 @@ public class SteeringBehaviours
         }
 
         return Vector3.zero;
+    }
+
+    public Vector3 Pursuit(Vehicle evader)
+    {
+        // if evader is ahead and facing the agent, just seek to the evaders
+        // current position
+        Vector3 toEvader = evader.Position - rigidbody.position;
+
+        float relativeHeading = Vector3.Dot(vehicle.Heading, evader.Heading);
+
+        if (Vector3.Dot(toEvader, vehicle.Heading) > 0 && (relativeHeading < -0.95f))
+            return Seek(evader.Position);
+
+        // try to predict where the evader will be
+        float lookAheadTime = toEvader.magnitude / (vehicle.maxSpeed + evader.Speed);
+
+        // seek to the predicted future position
+        return Seek(evader.Position + evader.Velocity * lookAheadTime);
     }
 
     public bool AccumulateForce(Vector3 forceToAdd)

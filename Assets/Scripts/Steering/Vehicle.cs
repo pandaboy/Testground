@@ -8,6 +8,7 @@ public class Vehicle : MovingEntity {
 
     public Transform target;
     public BehaviourType behaviourType = BehaviourType.ARRIVE;
+    public GameObject pursuit = null;
 
 	// Use this for initialization
 	void Start ()

@@ -136,8 +136,9 @@ MonoBehaviour:
   maxSpeed: 10
   maxForce: 10
   turnRate: 10
-  target: {fileID: 1672245404}
+  target: {fileID: 210291742}
   behaviourType: 4
+  pursuit: {fileID: 0}
 --- !u!23 &94479042
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -193,7 +194,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!1 &123062464
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,8 +229,9 @@ MonoBehaviour:
   maxSpeed: 50
   maxForce: 10
   turnRate: 10
-  target: {fileID: 1672245404}
-  behaviourType: 4
+  target: {fileID: 94479045}
+  behaviourType: 1
+  pursuit: {fileID: 0}
 --- !u!54 &123062466
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -299,7 +301,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 3
 --- !u!1 &210291736
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,8 +336,9 @@ MonoBehaviour:
   maxSpeed: 5
   maxForce: 5
   turnRate: 5
-  target: {fileID: 2098917622}
-  behaviourType: 2
+  target: {fileID: 94479045}
+  behaviourType: 8
+  pursuit: {fileID: 2098917616}
 --- !u!54 &210291738
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -405,7 +408,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!1 &1038648192
 GameObject:
   m_ObjectHideFlags: 0
@@ -465,7 +468,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
 --- !u!1 &1672245403
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,11 +491,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1672245403}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.40999985, y: 1.30999994, z: -4.82000017}
+  m_LocalPosition: {x: 5.51999998, y: 1.30999994, z: -10.8800001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
 --- !u!1 &1870015899
 GameObject:
   m_ObjectHideFlags: 0
@@ -577,7 +580,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
 --- !u!1 &1950781083
 GameObject:
   m_ObjectHideFlags: 0
@@ -687,6 +690,7 @@ MonoBehaviour:
   turnRate: 5
   target: {fileID: 1672245404}
   behaviourType: 4
+  pursuit: {fileID: 0}
 --- !u!54 &2098917618
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -756,4 +760,4 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
