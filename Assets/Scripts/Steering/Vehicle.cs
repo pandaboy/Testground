@@ -1,10 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
+using MonoGraph;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Vehicle : MovingEntity
 {
     #region private members
     private SteeringBehaviours steering;
+    public SteeringBehaviours Steering
+    {
+        get
+        {
+            return steering;
+        }
+    }
     private Rigidbody rb;
     #endregion
 
@@ -40,5 +49,29 @@ public class Vehicle : MovingEntity
 
             side = Vector3.Cross(heading, Vector3.up).normalized;
         }
-	}
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "NPC")
+        {
+            RelationshipGraph.Relationships.Relationship enemyR =
+                new RelationshipGraph.Relationships.Relationship(RelationshipGraph.RelationshipType.ENEMY);
+            RelationshipGraph.Relationships.Relationship friendlyR =
+                new RelationshipGraph.Relationships.Relationship(RelationshipGraph.RelationshipType.FRIEND);
+            Entity otherEntity = other.GetComponent<Entity>();
+            Entity thisEntity = GetComponent<Entity>();
+            
+            // if it's an enemy, change state to evade!
+            if(Graph.Instance.HaveRelationship(thisEntity, otherEntity, enemyR))
+            {
+                GetComponent<SteeringStateScript>().ChangeState(BehaviourType.EVADE, other.gameObject);
+            }
+
+            if (Graph.Instance.HaveRelationship(thisEntity, otherEntity, friendlyR))
+            {
+                GetComponent<SteeringStateScript>().ChangeState(BehaviourType.PURSUIT, other.gameObject);
+            }
+        }
+    }
 }

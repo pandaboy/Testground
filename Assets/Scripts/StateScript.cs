@@ -19,6 +19,7 @@ public class StateScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
 	}
 
     public void ChangeState(States newState)

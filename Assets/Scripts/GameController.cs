@@ -25,9 +25,11 @@ public class GameController : MonoBehaviour
 	// Use this for initialization
 	void Start () {
         primary = Instantiate(character, new Vector3(8.8f, .5f, 0), Quaternion.identity) as GameObject;
-        group = Instantiate(group, Vector3.zero, Quaternion.identity) as GameObject;
-
-        graph.AddDirectConnection(new Connection(group, primary, followerRelationship));
+        if(group != null)
+        {
+            group = Instantiate(group, Vector3.zero, Quaternion.identity) as GameObject;
+            graph.AddDirectConnection(new Connection(group, primary, followerRelationship));
+        }
 
         // make two characters
         for (int i = 0; i < 2; i++)
@@ -37,7 +39,8 @@ public class GameController : MonoBehaviour
 
             // add connection to primary
             graph.AddDirectConnection(new Connection(c, primary, friendlyRelationship));
-            graph.AddDirectConnection(new Connection(c, group, memberRelationship));
+            if(group != null)
+                graph.AddDirectConnection(new Connection(c, group, memberRelationship));
         }
 
         for (int i = 0; i < 5; i++)
@@ -46,7 +49,8 @@ public class GameController : MonoBehaviour
             characters.Add(c);
 
             graph.AddDirectConnection(new Connection(c, primary, enemyRelationship));
-            graph.AddDirectConnection(new Connection(c, group, memberRelationship));
+            if(group != null)
+                graph.AddDirectConnection(new Connection(c, group, memberRelationship));
         }
 	}
 	

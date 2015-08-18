@@ -27,7 +27,6 @@ public class SteeringBehaviours
     private Vehicle vehicle;
     private Vector3 steeringForce;
     private Vector3 target;
-    private Rigidbody rigidbody;
     private BehaviourType behaviourType = BehaviourType.ARRIVE;
     private Vehicle otherVehicle = null;
 
@@ -38,15 +37,16 @@ public class SteeringBehaviours
     private Vector3 wanderTarget;
     #endregion Private Members
 
-    public SteeringBehaviours(Vehicle vehicle)
+    public SteeringBehaviours(Vehicle v)
     {
-        this.vehicle = vehicle;
-        rigidbody = this.vehicle.GetComponent<Rigidbody>();
+        vehicle = v;
         // retrieve the target from the vehicle settings
-        target = this.vehicle.target.position;
-        BehaviourType = this.vehicle.behaviourType;
+        if(vehicle.target)
+            target = vehicle.target.position;
+
+        BehaviourType = vehicle.behaviourType;
         
-        if(this.vehicle.other != null)
+        if(vehicle.other != null)
             otherVehicle = this.vehicle.other.GetComponent<Vehicle>();
 
         wanderTarget = Random.onUnitSphere * wanderRadius;
@@ -67,6 +67,19 @@ public class SteeringBehaviours
         set
         {
             behaviourType = value;
+        }
+    }
+
+    public Vehicle OtherVehicle
+    {
+        get
+        {
+            return otherVehicle;
+        }
+
+        set
+        {
+            otherVehicle = value;
         }
     }
 
