@@ -194,12 +194,10 @@ public class SteeringBehaviours
         float jitterSlice = wanderJitter * Time.deltaTime;
 
         wanderTarget += new Vector3(
-            Random.Range(1.0f, 1.0f) * jitterSlice,
-            vehicle.Position.y,
-            Random.Range(1.0f, 1.0f) * jitterSlice
+            Random.Range(-1.0f, 1.0f) * jitterSlice,
+            0.0f,
+            Random.Range(-1.0f, 1.0f) * jitterSlice
         );
-
-        //wanderTarget += Random.onUnitSphere * jitterSlice;
 
         // reproject back onto a unit circle
         wanderTarget.Normalize();
@@ -209,15 +207,10 @@ public class SteeringBehaviours
 
         // move the target wanderDistance ahead of the vehicle
         Vector3 targetLocal = wanderTarget + new Vector3(wanderDistance, 0, wanderDistance);
-
-        Debug.Log("LOCAL: " + targetLocal);
+        //Vector3 targetLocal = wanderTarget + (vehicle.Forward * wanderDistance);
 
         // project target to world space
-        //Vector3 targetWorld = vehicle.transform.TransformVector(targetLocal);
-        //Vector3 targetWorld = vehicle.transform.TransformPoint(targetLocal);
-        Vector3 targetWorld = vehicle.transform.TransformDirection(targetLocal);
-
-        Debug.Log("WORLD: " + targetLocal);
+        Vector3 targetWorld = vehicle.transform.TransformPoint(targetLocal);
 
         // steer towards it
         return targetWorld - vehicle.Position;
