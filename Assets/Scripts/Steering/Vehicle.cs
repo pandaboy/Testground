@@ -1,16 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Vehicle : MovingEntity {
-
+public class Vehicle : MovingEntity
+{
+    #region private members
     private SteeringBehaviours steering;
     private Rigidbody rb;
+    #endregion
 
+    #region public members
     public Transform target;
     public BehaviourType behaviourType = BehaviourType.ARRIVE;
-    public GameObject pursuit = null;
+    // other vehicle (for evasion, pursuit, etc)
+    public GameObject other = null;
+    #endregion
 
-	// Use this for initialization
+    // Use this for initialization
 	void Start ()
     {
         steering = new SteeringBehaviours(this);

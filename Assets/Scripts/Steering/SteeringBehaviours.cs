@@ -8,7 +8,9 @@ public enum BehaviourType
     SEEK = 1,
     FLEE = 2,
     ARRIVE = 4,
-    PURSUIT = 8
+    PURSUIT = 8,
+    EVADE = 16,
+    WANDER = 32
 }
 
 public enum Deceleration
@@ -20,13 +22,21 @@ public enum Deceleration
 
 public class SteeringBehaviours
 {
+    #region Private Members
     // reference to the vehicle to be moved
     private Vehicle vehicle;
     private Vector3 steeringForce;
     private Vector3 target;
     private Rigidbody rigidbody;
     private BehaviourType behaviourType = BehaviourType.ARRIVE;
-    private Vehicle pursuitVehicle = null;
+    private Vehicle otherVehicle = null;
+
+    // wander settings
+    private float wanderRadius = 1.2f;
+    private float wanderDistance = 2.0f;
+    private float wanderJitter = 80.0f;
+    private Vector3 wanderTarget;
+    #endregion Private Members
 
     public SteeringBehaviours(Vehicle vehicle)
     {
@@ -36,8 +46,10 @@ public class SteeringBehaviours
         target = this.vehicle.target.position;
         BehaviourType = this.vehicle.behaviourType;
         
-        if(this.vehicle.pursuit != null)
-            pursuitVehicle = this.vehicle.pursuit.GetComponent<Vehicle>();
+        if(this.vehicle.other != null)
+            otherVehicle = this.vehicle.other.GetComponent<Vehicle>();
+
+        wanderTarget = Random.onUnitSphere * wanderRadius;
     }
 
     public bool On(BehaviourType type)
@@ -64,33 +76,37 @@ public class SteeringBehaviours
 
         if(On(BehaviourType.SEEK))
         {
-            Vector3 force = Seek(target);
-
-            if (!AccumulateForce(force))
+            if (!AccumulateForce(Seek(target)))
                 return steeringForce;
         }
 
         if (On(BehaviourType.FLEE))
         {
-            Vector3 force = Flee(target);
-
-            if (!AccumulateForce(force))
+            if (!AccumulateForce(Flee(target)))
                 return steeringForce;
         }
 
         if (On(BehaviourType.ARRIVE))
         {
-            Vector3 force = Arrive(target, Deceleration.MEDIUM);
-
-            if (!AccumulateForce(force))
+            if (!AccumulateForce(Arrive(target, Deceleration.MEDIUM)))
                 return steeringForce;
         }
 
         if(On(BehaviourType.PURSUIT))
         {
-            Vector3 force = Pursuit(pursuitVehicle);
+            if (!AccumulateForce(Pursuit(otherVehicle)))
+                return steeringForce;
+        }
 
-            if (!AccumulateForce(force))
+        if(On(BehaviourType.EVADE))
+        {
+            if (!AccumulateForce(Evade(otherVehicle)))
+                return steeringForce;
+        }
+
+        if(On(BehaviourType.WANDER))
+        {
+            if (!AccumulateForce(Wander()))
                 return steeringForce;
         }
 
@@ -99,9 +115,9 @@ public class SteeringBehaviours
 
     public Vector3 Seek(Vector3 targetPosition)
     {
-        Vector3 desiredV = (targetPosition - rigidbody.position).normalized * vehicle.maxSpeed;
+        Vector3 desiredV = (targetPosition - vehicle.Position).normalized * vehicle.maxSpeed;
 
-        return (desiredV - rigidbody.velocity);
+        return (desiredV - vehicle.Velocity);
     }
 
     public Vector3 Flee(Vector3 targetPosition, float panicDistance = 10.0f)
@@ -110,17 +126,17 @@ public class SteeringBehaviours
         panicDistance *= panicDistance;
 
         // if we're far enough away, no reason to panic
-        if ((rigidbody.position - targetPosition).sqrMagnitude > panicDistance)
+        if ((vehicle.Position - targetPosition).sqrMagnitude > panicDistance)
             return Vector3.zero;
 
-        Vector3 desiredV = (rigidbody.position - targetPosition).normalized * vehicle.maxSpeed;
+        Vector3 desiredV = (vehicle.Position - targetPosition).normalized * vehicle.maxSpeed;
 
-        return (desiredV - rigidbody.velocity);
+        return (desiredV - vehicle.Velocity);
     }
 
     public Vector3 Arrive(Vector3 targetPosition, Deceleration deceleration)
     {
-        Vector3 toTarget = targetPosition - rigidbody.position;
+        Vector3 toTarget = targetPosition - vehicle.Position;
 
         float distToTarget = toTarget.magnitude;
 
@@ -134,7 +150,7 @@ public class SteeringBehaviours
 
             Vector3 desiredV = toTarget * (speed / distToTarget);
 
-            return desiredV - rigidbody.velocity;
+            return desiredV - vehicle.Velocity;
         }
 
         return Vector3.zero;
@@ -144,18 +160,87 @@ public class SteeringBehaviours
     {
         // if evader is ahead and facing the agent, just seek to the evaders
         // current position
-        Vector3 toEvader = evader.Position - rigidbody.position;
+        Vector3 toEvader = evader.Position - vehicle.Position;
 
-        float relativeHeading = Vector3.Dot(vehicle.Heading, evader.Heading);
+        float relativeHeading = Vector3.Dot(vehicle.Forward, evader.Forward);
 
-        if (Vector3.Dot(toEvader, vehicle.Heading) > 0 && (relativeHeading < -0.95f))
+        if (Vector3.Dot(toEvader, vehicle.Forward) > 0 && (relativeHeading < -0.95f))
             return Seek(evader.Position);
 
         // try to predict where the evader will be
         float lookAheadTime = toEvader.magnitude / (vehicle.maxSpeed + evader.Speed);
 
+        lookAheadTime += TurnaroundTime(this.vehicle, evader.Position);
+
         // seek to the predicted future position
         return Seek(evader.Position + evader.Velocity * lookAheadTime);
+    }
+
+    public Vector3 Evade(Vehicle pursuer)
+    {
+        Vector3 toPursuer = pursuer.Position - vehicle.Position;
+
+        // look ahead time is proportional to the distance between
+        // the pursuer and the evader, and inversely proportional to
+        // the sum of the two vehicle's velocities
+        float lookAheadTime = toPursuer.magnitude / (vehicle.maxSpeed + pursuer.Speed);
+
+        // flee from predicted future position of pursuer
+        return Flee(pursuer.Position + pursuer.Velocity * lookAheadTime);
+    }
+
+    public Vector3 Wander()
+    {
+        float jitterSlice = wanderJitter * Time.deltaTime;
+
+        wanderTarget += new Vector3(
+            Random.Range(1.0f, 1.0f) * jitterSlice,
+            vehicle.Position.y,
+            Random.Range(1.0f, 1.0f) * jitterSlice
+        );
+
+        //wanderTarget += Random.onUnitSphere * jitterSlice;
+
+        // reproject back onto a unit circle
+        wanderTarget.Normalize();
+
+        // increase length of vector to the same as the radius of the wander circle
+        wanderTarget *= wanderRadius;
+
+        // move the target wanderDistance ahead of the vehicle
+        Vector3 targetLocal = wanderTarget + new Vector3(wanderDistance, 0, wanderDistance);
+
+        Debug.Log("LOCAL: " + targetLocal);
+
+        // project target to world space
+        //Vector3 targetWorld = vehicle.transform.TransformVector(targetLocal);
+        //Vector3 targetWorld = vehicle.transform.TransformPoint(targetLocal);
+        Vector3 targetWorld = vehicle.transform.TransformDirection(targetLocal);
+
+        Debug.Log("WORLD: " + targetLocal);
+
+        // steer towards it
+        return targetWorld - vehicle.Position;
+    }
+
+    float TurnaroundTime(Vehicle agent, Vector3 target)
+    {
+        // normalised vector to the target
+        Vector3 toTarget = (target - agent.Position).normalized;
+
+        // dot product will be 1 if the target is directly ahead
+        // and -1 if the target is directly behind.
+        float dot = Vector3.Dot(agent.Heading, toTarget);
+
+        // higher value for higher max turn rate.
+        // 0.5f means the vehicle will take 1 second to
+        // turnaround to its target from facing the opposite way.
+        float coefficient = 0.5f;
+
+        // subtracting by 1 and multiplying by the negative of the
+        // coefficient will give a positive value proportional to 
+        // the rotational displacement of the vehicle and target
+        return (dot - 1.0f) * -coefficient;
     }
 
     public bool AccumulateForce(Vector3 forceToAdd)

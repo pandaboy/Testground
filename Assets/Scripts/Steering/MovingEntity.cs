@@ -55,6 +55,19 @@ public class MovingEntity : MonoBehaviour
         }
     }
 
+    public Vector3 Forward
+    {
+        get
+        {
+            return transform.forward;
+        }
+
+        set
+        {
+            transform.forward = value;
+        }
+    }
+
     protected Vector3 side;
     public Vector3 Side
     {
@@ -66,6 +79,19 @@ public class MovingEntity : MonoBehaviour
         set
         {
             side = value;
+        }
+    }
+
+    public Vector3 Right
+    {
+        get
+        {
+            return transform.right;
+        }
+
+        set
+        {
+            transform.right = value;
         }
     }
 
