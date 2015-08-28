@@ -10,6 +10,8 @@ public class Demo3GameController : MonoBehaviour
     public GameObject castMemberPrefab;
     public GameObject castLead;
 
+    public InputField messageFied;
+
     // guard attributes
     protected GuardScript gs;
 
@@ -54,12 +56,32 @@ public class Demo3GameController : MonoBehaviour
 
             if(conn.Relationship.RelationshipType == RelationshipType.FRIEND)
             {
-                gs.SetResponse("YEAH THAT'S MY FRIEND", true);
+                gs.SetResponse(Responses.AGREE, "YEAH THAT'S MY FRIEND");
             }
             else
             {
-                gs.SetResponse("Don't know who that is", false);
+                gs.SetResponse(Responses.DISAGREE, "Don't know who that is");
             }
         }
 	}
+
+
+
+    public void SendStringMessage()
+    {
+        // get the text in the input field
+        StringMessage strMessage = new StringMessage(messageFied.text);
+        castLead.GetComponent<Demo3Character>().HandleMessage(strMessage);
+        messageFied.text = "";
+    }
+
+    public void PositiveReaction()
+    {
+        gs.SetResponse(Responses.AGREE, "Yeah, yeah what about it");
+    }
+
+    public void NegativeReaction()
+    {
+        gs.SetResponse(Responses.DISAGREE, "Nope, Get outta here!");
+    }
 }

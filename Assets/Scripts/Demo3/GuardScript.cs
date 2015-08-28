@@ -2,6 +2,14 @@
 using UnityEngine.UI;
 using System.Collections;
 
+public enum Responses
+{
+    IDLERESPONSE = 0,
+    AGREE,
+    DISAGREE,
+    MESSAGE
+}
+
 public class GuardScript : MonoBehaviour
 {
     Animator anim;
@@ -13,25 +21,11 @@ public class GuardScript : MonoBehaviour
     {
         anim = GetComponent<Animator>();
     }
-	
-	void Update ()
-    {
-        if(Input.GetKeyDown(KeyCode.W))
-        {
-            SetResponse("Yeah, Yeah what about it");
-            anim.SetTrigger("agree");
-        }
 
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            SetResponse("Nope, Get outta here!");
-            anim.SetTrigger("disagree");
-        }
-	}
-
-    public void SetResponse(string response = "", bool responseType = true)
+    // calls the relevant animation and displays a response during the animation
+    public void SetResponse(Responses responseType = Responses.IDLERESPONSE, string message = "")
     {
-        if(response == "")
+        if(responseType == Responses.IDLERESPONSE)
         {
             // on first load, just say hi.
             if (firstLoad)
@@ -41,17 +35,24 @@ public class GuardScript : MonoBehaviour
             }
             else
             {
+                int choice = Random.Range(0, idleResponses.Length + 3);
                 // otherwise pick one from a random set of messages
-                string responseText = idleResponses[Random.Range(0, idleResponses.Length)];
-                text.text = responseText;
+                if (choice < idleResponses.Length)
+                    text.text = idleResponses[choice];
+                else
+                    text.text = message;
             }
         }
         else {
-            text.text = response;
-            if (responseType)
-                anim.SetTrigger("agree");
-            else
-                anim.SetTrigger("disagree");
+            text.text = message;
+            
+            // call the relevant animation
+            switch(responseType)
+            {
+                case Responses.AGREE:    anim.SetTrigger("agree"); break;
+                case Responses.DISAGREE: anim.SetTrigger("disagree"); break;
+                case Responses.MESSAGE:  anim.SetTrigger("message"); break;
+            }
         }
     }
 }
