@@ -72,10 +72,15 @@ public class Demo3GameController : MonoBehaviour
                 graph.AddConnection(castLead.GetComponent<Demo3Character>(), new Connection(cast[castNames[3]], cast[castNames[5]], rival));
             }
 
-            // connection known through group i.e. group knows so I know
-            if (i == 10)
+            if(i == 7)
             {
-                graph.AddDirectConnection(new Connection(cast[castNames[4]], cast[castNames[8]], enemy));
+                graph.AddDirectConnection(new Connection(castLead, castMember, rival));
+            }
+
+            // connection known through group i.e. group knows so I know
+            if (i == 9)
+            {
+                graph.AddDirectConnection(new Connection(cast[castNames[4]], castMember, enemy));
             }
 
             // otherwise, the entities are unknown
@@ -139,7 +144,10 @@ public class Demo3GameController : MonoBehaviour
 
         if (knowsOf)
         {
-            gs.SetResponse(Responses.AGREE, "YES I KNOW OF " + activeCastMember.name);
+            if (activeCharacter.EntityType == EntityType.GROUP)
+                gs.SetResponse(Responses.AGREE, "YES, I'm a member of " + activeCastMember.name);
+            else
+                gs.SetResponse(Responses.AGREE, "YES I KNOW OF " + activeCastMember.name);
         }
         else if(connectedTo)
         {
@@ -148,6 +156,51 @@ public class Demo3GameController : MonoBehaviour
         else
         {
             gs.SetResponse(Responses.DISAGREE, "I DON'T KNOW WHO THAT IS");
+        }
+
+    }
+
+    // check the graph to see if we "know" the current active cast member
+    public void RelationshipWithCastMember()
+    {
+        SetActiveCastMember();
+
+        Demo3Character leadCharacter = castLead.GetComponent<Demo3Character>();
+        Demo3Character activeCharacter = activeCastMember.GetComponent<Demo3Character>();
+        Demo3Character groupEntity = cast[castNames[4]].GetComponent<Demo3Character>();
+
+        Connection connection = null;
+
+        if (graph.HasConnection(leadCharacter, activeCharacter))
+            connection = graph.GetConnection(leadCharacter, activeCharacter);
+
+        if (graph.HasConnection(groupEntity, activeCharacter))
+            connection = graph.GetEntityConnection(groupEntity, groupEntity, activeCharacter);
+
+        if(connection != null)
+        {
+            switch(connection.Relationship.RelationshipType)
+            {
+                case RelationshipType.FRIEND:
+                    gs.SetResponse(Responses.HAPPY, "We're " + RelationshipType.FRIEND + "'s!");
+                    break;
+
+                case RelationshipType.RIVAL:
+                    gs.SetResponse(Responses.DISMISSIVE, "We're " + RelationshipType.RIVAL + "'s!");
+                    break;
+
+                case RelationshipType.ENEMY:
+                    gs.SetResponse(Responses.ANGRY, "That's my " + RelationshipType.ENEMY + "!");
+                    break;
+
+                case RelationshipType.MEMBER:
+                    gs.SetResponse(Responses.AGREE, "I'm a " + RelationshipType.MEMBER + "!");
+                    break;
+            }
+        }
+        else
+        {
+            gs.SetResponse(Responses.MESSAGE, "Who?");
         }
 
     }
