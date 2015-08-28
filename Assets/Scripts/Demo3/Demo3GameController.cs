@@ -10,7 +10,7 @@ public class Demo3GameController : MonoBehaviour
     public GameObject castMemberPrefab;
     public GameObject castMemberCheckPrefab;
     public GameObject castLead;
-    public string[] castNames = new string[4];
+    public string[] castNames = new string[10];
     public InputField messageFied;
 
     // guard attributes
@@ -52,9 +52,35 @@ public class Demo3GameController : MonoBehaviour
         {
             GameObject castMember = Instantiate(castMemberPrefab);
             castMember.name = castNames[i];
-            graph.AddDirectConnection(new Connection(castLead, castMember, friend));
 
-            int ypos = 125 - (i * 20);
+            // group connection
+            if (i == 4)
+            {
+                castMember.GetComponent<Demo3Character>().EntityType = EntityType.GROUP;
+                graph.AddDirectConnection(new Connection(castLead, castMember, member));
+            }
+
+            // direct connections
+            if (i < 4)
+            {
+                graph.AddDirectConnection(new Connection(castLead, castMember, friend));
+            }
+
+            // indirect connection
+            if (i > 5)
+            {
+                graph.AddConnection(castLead.GetComponent<Demo3Character>(), new Connection(cast[castNames[3]], cast[castNames[5]], rival));
+            }
+
+            // connection known through group i.e. group knows so I know
+            if (i == 10)
+            {
+                graph.AddDirectConnection(new Connection(cast[castNames[4]], cast[castNames[8]], enemy));
+            }
+
+            // otherwise, the entities are unknown
+
+            int ypos = 250 - (i * 20);
             GameObject castCheckbox = Instantiate(castMemberCheckPrefab, new Vector3(90, ypos, 0), Quaternion.identity) as GameObject;
             castCheckbox.transform.SetParent(canvas.transform);
             castCheckbox.GetComponentInChildren<Text>().text = castNames[i];
@@ -69,27 +95,6 @@ public class Demo3GameController : MonoBehaviour
 
         activeRelationshipType = RelationshipType.FRIEND;
         activeCastMember = cast[castNames[0]];
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-        /*
-        if(Input.GetKeyDown(KeyCode.Q))
-        {
-            // get the connection from our lead to Alice
-            Connection conn = graph.GetConnection(castLead.GetComponent<Demo3Character>(), cast[0].GetComponent<Demo3Character>());
-
-            if(conn.Relationship.RelationshipType == RelationshipType.FRIEND)
-            {
-                gs.SetResponse(Responses.AGREE, "YEAH THAT'S MY FRIEND");
-            }
-            else
-            {
-                gs.SetResponse(Responses.DISAGREE, "Don't know who that is");
-            }
-        }
-        */
 	}
 
     // this will construct a connection using the given source,
@@ -107,11 +112,9 @@ public class Demo3GameController : MonoBehaviour
         string weightString = weightInput.text;
         int weight = int.Parse(weightString);
 
-        //RelationshipType type = RelationshipType.FRIEND; // relationship type
         RelationshipType type = activeRelationshipType;
         Relationship rel = new Relationship(type, weight);
 
-        //GameObject to = cast[0]; // cast member
         GameObject to = activeCastMember;
 
         // our "from" attribute is always the castLead for this demo
@@ -153,13 +156,28 @@ public class Demo3GameController : MonoBehaviour
         messageFied.text = "";
     }
 
-    public void PositiveReaction()
+    public void PositiveReaction(string message = "Yeah, yeah what about it")
     {
-        gs.SetResponse(Responses.AGREE, "Yeah, yeah what about it");
+        gs.SetResponse(Responses.AGREE, message);
     }
 
-    public void NegativeReaction()
+    public void NegativeReaction(string message = "Nope, Get outta here!")
     {
-        gs.SetResponse(Responses.DISAGREE, "Nope, Get outta here!");
+        gs.SetResponse(Responses.DISAGREE, message);
+    }
+
+    public void AngryReaction(string message = "ARGH, DON'T GET ME STARTED!")
+    {
+        gs.SetResponse(Responses.ANGRY, message);
+    }
+
+    public void HappyReaction(string message = "Hahahaha, yeah I know!")
+    {
+        gs.SetResponse(Responses.HAPPY, message);
+    }
+
+    public void DismissiveReaction(string message = "I don't care about that!")
+    {
+        gs.SetResponse(Responses.DISMISSIVE, message);
     }
 }

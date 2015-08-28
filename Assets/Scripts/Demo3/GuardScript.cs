@@ -7,7 +7,10 @@ public enum Responses
     IDLERESPONSE = 0,
     AGREE,
     DISAGREE,
-    MESSAGE
+    MESSAGE,
+    HAPPY,
+    DISMISSIVE,
+    ANGRY
 }
 
 public class GuardScript : MonoBehaviour
@@ -51,7 +54,10 @@ public class GuardScript : MonoBehaviour
             {
                 case Responses.AGREE:    anim.SetTrigger("agree"); break;
                 case Responses.DISAGREE: anim.SetTrigger("disagree"); break;
-                case Responses.MESSAGE:  anim.SetTrigger("message"); break;
+                case Responses.MESSAGE: anim.SetTrigger("message"); break;
+                case Responses.ANGRY: anim.SetTrigger("angry"); break;
+                case Responses.HAPPY: anim.SetTrigger("happy"); break;
+                case Responses.DISMISSIVE: anim.SetTrigger("dismissive"); break;
             }
         }
     }
