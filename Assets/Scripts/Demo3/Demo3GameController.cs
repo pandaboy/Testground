@@ -125,6 +125,33 @@ public class Demo3GameController : MonoBehaviour
         castLead.GetComponent<Demo3Character>().HandleMessage(connMessage);
     }
 
+    // check the graph to see if we "know" the current active cast member
+    public void KnowCastMember()
+    {
+        SetActiveCastMember();
+
+        Demo3Character leadCharacter = castLead.GetComponent<Demo3Character>();
+        Demo3Character activeCharacter = activeCastMember.GetComponent<Demo3Character>();
+
+        // check if the active member is in either indirect or direct relationships
+        bool knowsOf = graph.KnowsConnectionsOf(leadCharacter, activeCharacter);
+        bool connectedTo = graph.HasConnection(leadCharacter, activeCharacter);
+
+        if (knowsOf)
+        {
+            gs.SetResponse(Responses.AGREE, "YES I KNOW OF " + activeCastMember.name);
+        }
+        else if(connectedTo)
+        {
+            gs.SetResponse(Responses.AGREE, "YES, I KNOW " + activeCastMember.name + " PERSONALLY");
+        }
+        else
+        {
+            gs.SetResponse(Responses.DISAGREE, "I DON'T KNOW WHO THAT IS");
+        }
+
+    }
+
     public void SetActiveRelationshipType()
     {
         // this is an EXTREMELY poor hack but will work for now
