@@ -21,12 +21,16 @@ public class Demo3Character : Entity
         //base.HandleMessage(message);
 
         if(message.GetType() == typeof(ConnectionMessage))
-            gs.SetResponse(Responses.AGREE, "I GOT A CONNECTION MESSAGE!");
+        {
+            ConnectionMessage msg = message as ConnectionMessage;
+            string text = "Connection to " + msg.Connection.To.name + " R[" + msg.Connection.Relationship + "]";
+            gs.SetResponse(Responses.MESSAGE, text);
+        }
 
         if (message.GetType() == typeof(StringMessage))
         {
             StringMessage msg = message as StringMessage;
-            gs.SetResponse(Responses.MESSAGE, "MESSAGE: \"" + msg.Text + "\"");
+            gs.SetResponse(Responses.MESSAGE, "\"" + msg.Text + "\"");
         }
 
         return true;

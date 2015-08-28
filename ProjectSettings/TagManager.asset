@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - NPC
+  - RELATIONSHIP
+  - Canvas
+  - CastToggleGroup
+  - CASTMEMBER
+  - Weight
   layers:
   - Default
   - TransparentFX
