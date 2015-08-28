@@ -160,6 +160,31 @@ public class Demo3GameController : MonoBehaviour
 
     }
 
+    public void HistoryWithCastMember()
+    {
+        SetActiveCastMember();
+
+        Demo3Character leadCharacter = castLead.GetComponent<Demo3Character>();
+        Demo3Character activeCharacter = activeCastMember.GetComponent<Demo3Character>();
+        Relationship checkRelationship = new Relationship(activeRelationshipType);
+
+        string text;
+        if(graph.HaveRelationshipHistory(leadCharacter, activeCharacter, checkRelationship))
+        {
+            RelationshipType recentRelationshipType = graph.GetConnection(leadCharacter, activeCharacter).Relationship.RelationshipType;
+
+            if (recentRelationshipType == activeRelationshipType)
+                text = "Yes, " + activeCastMember.name + " is my " + activeRelationshipType;
+            else
+                text = "Yes, " + activeCastMember.name + " used to be my " + activeRelationshipType;
+        }
+        else
+        {
+            text = "I have no history like that with " + activeCastMember.name;
+        }
+        gs.SetResponse(Responses.MESSAGE, text);
+    }
+
     // check the graph to see if we "know" the current active cast member
     public void RelationshipWithCastMember()
     {
