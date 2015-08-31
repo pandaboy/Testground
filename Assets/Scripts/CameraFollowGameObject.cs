@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CameraFollowGameObject : MonoBehaviour {
-
+public class CameraFollowGameObject : MonoBehaviour
+{
     public GameObject player;
-
     private Vector3 offset;
 
     void Awake()
@@ -12,13 +11,15 @@ public class CameraFollowGameObject : MonoBehaviour {
         player = FindObjectOfType<DemoGameController>().leadCharacter;
     }
 
-	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
+        // offset the camera from the player position
         offset = transform.position - player.transform.position;
 	}
 	
-	// Update is called once per frame
-	void LateUpdate () {
+	void LateUpdate ()
+    {
+        // update the camera position by tracking the player position
         transform.position = player.transform.position + offset;
 	}
 }

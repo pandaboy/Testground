@@ -367,8 +367,15 @@ namespace MonoGraph
             // we have to check all the connections for each entity
             foreach (IList<Connection> connections in _graph.Values)
             {
+                // go through each connection
                 foreach (Connection connection in connections)
                 {
+
+                    // if the source of the connection is the same as the entity it will not work and can be skipped
+                    // i.e. an entity can't have relationship history with itself.
+                    if (connection.From.Equals(entity))
+                        continue;
+
                     // in each connection look through the relationship history
                     foreach (Relationship rel in connection.History)
                     {
@@ -467,7 +474,6 @@ namespace MonoGraph
         }
         #endregion
 
-        #region Utilities
         /// <summary>
         /// Displays a list of known connections to the console
         /// </summary>
@@ -493,6 +499,5 @@ namespace MonoGraph
             }
             Debug.Log("--");
         }
-        #endregion
     }
 }

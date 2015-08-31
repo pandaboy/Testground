@@ -16,6 +16,7 @@ GameObject:
   - 114: {fileID: 11416148}
   - 114: {fileID: 11434664}
   - 135: {fileID: 13517152}
+  - 114: {fileID: 11459780}
   m_Layer: 0
   m_Name: SphereGuy
   m_TagString: NPC
@@ -107,6 +108,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c4d1221ce6801a848b5505bae889e45f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11459780
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 108500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5fbd3a76a63922458544401d0954765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &11475962

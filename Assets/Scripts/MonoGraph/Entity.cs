@@ -13,7 +13,6 @@ namespace MonoGraph
         /// </summary>
         protected static int count = 0;
 
-        #region Properties
         private int _EntityId;
         public int EntityId
         {
@@ -37,14 +36,12 @@ namespace MonoGraph
                 return count;
             }
         }
-        #endregion
-
+        
         public virtual void Awake()
         {
             EntityId = ++count;
         }
 
-        #region INode implementations
         public virtual bool HandleMessage(IMessage message)
         {
             if (message.GetType() == typeof(ConnectionMessage))
@@ -68,7 +65,6 @@ namespace MonoGraph
 
             return false;
         }
-        #endregion
 
         public override bool Equals(object o)
         {
@@ -88,14 +84,11 @@ namespace MonoGraph
             return _EntityId;
         }
 
-        #region utilities
         public override string ToString()
         {
             return "[ID: " + EntityId + "]";
         }
-        #endregion
 
-        #region Connections
         public virtual void LearnConnection(Connection newConnection)
         {
             Graph graph = Graph.Instance;
@@ -137,9 +130,6 @@ namespace MonoGraph
                 {
                     Connection currentConnection = graph.GetEntityConnection(learnConnection.From, learnConnection);
 
-                    Debug.Log("CURRENT: " + currentConnection);
-                    Debug.Log("NEW: " + learnConnection);
-
                     if (currentConnection.Relationship.Equals(learnConnection.Relationship))
                         MatchingConnection(learnConnection, currentConnection);
                     else
@@ -154,8 +144,6 @@ namespace MonoGraph
 
         public virtual void ConflictingConnection(Connection newConnection, Connection currentConnection = null)
         {
-            Debug.Log("CONFLICT");
-
             Graph graph = Graph.Instance;
             if(currentConnection == null)
             {
@@ -178,8 +166,6 @@ namespace MonoGraph
 
         public virtual void MatchingConnection(Connection newConnection, Connection currentConnection)
         {
-            Debug.Log("MATCH");
-
             Relationship newRelationship = newConnection.Relationship;
             Relationship currentRelationship = currentConnection.Relationship;
 
@@ -188,6 +174,5 @@ namespace MonoGraph
                 currentRelationship.Weight = newRelationship.Weight;
             }
         }
-        #endregion
     }
 }

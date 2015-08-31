@@ -6,12 +6,6 @@ public class SteeringStateScript : MonoBehaviour
 {
     private BehaviourType behaviourType = BehaviourType.WANDER;
 
-	// Use this for initialization
-	void Start ()
-    {
-        //ChangeState(BehaviourType.None);
-	}
-
     public void ChangeState(BehaviourType newType, GameObject other = null)
     {
         behaviourType = newType;

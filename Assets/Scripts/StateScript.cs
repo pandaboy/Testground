@@ -8,18 +8,14 @@ public enum States
     SUPPORTIVE
 }
 
-public class StateScript : MonoBehaviour {
-
+public class StateScript : MonoBehaviour
+{
     public States state = States.NEUTRAL;
 
-	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
+        // initialize the color
         ChangeColor();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-
 	}
 
     public void ChangeState(States newState)

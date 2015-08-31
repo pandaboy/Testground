@@ -53,7 +53,23 @@ public class Vehicle : MovingEntity
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "NPC")
+        Vehicle otherVehicle = other.GetComponent<Vehicle>();
+        if (other.tag == "NPC" && this.tag == "NPC" && otherVehicle.behaviourType != BehaviourType.PURSUIT)
+        {
+            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+            Entity player = playerObject.GetComponent<Entity>();
+
+            // pass a message to become an enemy of the player
+            Connection connection = new Connection(
+                other.GetComponent<Entity>(),
+                player,
+                new RelationshipGraph.Relationships.Relationship(RelationshipGraph.RelationshipType.FRIEND, 5));
+
+            Graph.Instance.AddDirectConnection(connection);
+            other.GetComponent<Renderer>().material.color = new Color(.75f, .75f, 0.0f);
+        }
+
+        if(other.tag == "Player")
         {
             RelationshipGraph.Relationships.Relationship enemyR =
                 new RelationshipGraph.Relationships.Relationship(RelationshipGraph.RelationshipType.ENEMY);

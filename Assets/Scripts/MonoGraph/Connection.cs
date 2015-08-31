@@ -6,7 +6,6 @@ namespace MonoGraph
 {
     public class Connection : HistoryEdge<Entity, Relationship>
     {
-        #region Constructors
         public Connection() : base() { }
 
         public Connection(Entity from, Entity to, Relationship relationship)
@@ -17,7 +16,6 @@ namespace MonoGraph
             : base(from.GetComponent<Entity>(), to.GetComponent<Entity>(), relationship)
         {
         }
-        #endregion Constructors
 
         public override string ToString()
         {
