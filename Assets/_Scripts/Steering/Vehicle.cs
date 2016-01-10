@@ -46,7 +46,6 @@ public class Vehicle : MovingEntity
         if(rb.velocity.sqrMagnitude > 0.00000001)
         {
             heading = rb.velocity.normalized;
-
             side = Vector3.Cross(heading, Vector3.up).normalized;
         }
     }

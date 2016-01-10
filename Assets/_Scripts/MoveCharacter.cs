@@ -3,7 +3,6 @@ using System.Collections;
 
 public class MoveCharacter : MonoBehaviour
 {
-
     public float speed;
 
     private Rigidbody rb;

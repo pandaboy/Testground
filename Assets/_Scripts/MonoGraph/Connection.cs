@@ -15,6 +15,7 @@ namespace MonoGraph
         public Connection(GameObject from, GameObject to, Relationship relationship)
             : base(from.GetComponent<Entity>(), to.GetComponent<Entity>(), relationship)
         {
+            // ...
         }
 
         public override string ToString()

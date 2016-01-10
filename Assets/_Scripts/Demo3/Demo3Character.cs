@@ -36,8 +36,9 @@ public class Demo3Character : Entity
     public override void MatchingConnection(Connection newConnection, Connection currentConnection)
     {
         string text = "Yeah I know " + newConnection.To.name + " we're " + newConnection.Relationship.RelationshipType + "'s";
-        if (newConnection.To.EntityType == EntityType.GROUP)
+        if (newConnection.To.EntityType == EntityType.GROUP) {
             text = "Yeah, I'm a " + newConnection.Relationship.RelationshipType + " of " + newConnection.To.name;
+        }
 
         gs.SetResponse(Responses.HAPPY, text);
 
@@ -47,23 +48,19 @@ public class Demo3Character : Entity
     public override void ConflictingConnection(Connection newConnection, Connection currentConnection = null)
     {
         string text;
-        if (currentConnection == null)
-        {
+        if (currentConnection == null) {
             text = "So, " + newConnection.To.name + " is a " + newConnection.Relationship.RelationshipType + "...";
             gs.SetResponse(Responses.MESSAGE, text);
         }
-        else
-        {
+        else {
             Relationship newRelationship = newConnection.Relationship;
             Relationship currentRelationship = currentConnection.Relationship;
 
-            if (currentRelationship.Weight <= newRelationship.Weight)
-            {
+            if (currentRelationship.Weight <= newRelationship.Weight) {
                 text = "I trust your judgement, " + newConnection.To.name + " is now my " + newRelationship.RelationshipType;
                 gs.SetResponse(Responses.AGREE, text);
             }
-            else
-            {
+            else {
                 text = "You liar! " + currentConnection.To.name + " is my " + currentRelationship.RelationshipType + "!";
                 gs.SetResponse(Responses.ANGRY, text);
             }

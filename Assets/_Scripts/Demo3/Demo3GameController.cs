@@ -92,7 +92,9 @@ public class Demo3GameController : MonoBehaviour
             castCheckbox.name = castNames[i];
             castCheckbox.GetComponent<Toggle>().group = GameObject.FindGameObjectWithTag("CastToggleGroup").GetComponent<ToggleGroup>();
             if (i == 0)
+            {
                 castCheckbox.GetComponent<Toggle>().isOn = true;
+            }
 
             // track the cast members
             cast.Add(castNames[i], castMember);
@@ -145,9 +147,13 @@ public class Demo3GameController : MonoBehaviour
         if (knowsOf)
         {
             if (activeCharacter.EntityType == EntityType.GROUP)
+            {
                 gs.SetResponse(Responses.AGREE, "YES, I'm a member of " + activeCastMember.name);
+            }
             else
+            {
                 gs.SetResponse(Responses.AGREE, "YES I KNOW OF " + activeCastMember.name);
+            }
         }
         else if(connectedTo)
         {
@@ -174,9 +180,13 @@ public class Demo3GameController : MonoBehaviour
             RelationshipType recentRelationshipType = graph.GetConnection(leadCharacter, activeCharacter).Relationship.RelationshipType;
 
             if (recentRelationshipType == activeRelationshipType)
+            {
                 text = "Yes, " + activeCastMember.name + " is my " + activeRelationshipType;
+            }
             else
+            {
                 text = "Yes, " + activeCastMember.name + " used to be my " + activeRelationshipType;
+            }
         }
         else
         {
@@ -197,10 +207,14 @@ public class Demo3GameController : MonoBehaviour
         Connection connection = null;
 
         if (graph.HasConnection(leadCharacter, activeCharacter))
+        {
             connection = graph.GetConnection(leadCharacter, activeCharacter);
+        }
 
         if (graph.HasConnection(groupEntity, activeCharacter))
+        {
             connection = graph.GetEntityConnection(groupEntity, groupEntity, activeCharacter);
+        }
 
         if(connection != null)
         {

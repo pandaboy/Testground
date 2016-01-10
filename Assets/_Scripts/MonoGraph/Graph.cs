@@ -107,8 +107,9 @@ namespace MonoGraph
             {
                 foreach (Connection connection in GetConnections(entity))
                 {
-                    if (connection.From.Equals(other) || connection.To.Equals(other))
+                    if (connection.From.Equals(other) || connection.To.Equals(other)) {
                         otherConnections.Add(connection);
+                    }
                 }
             }
 
@@ -123,8 +124,9 @@ namespace MonoGraph
             {
                 foreach (Connection connection in GetIndirectConnections(entity))
                 {
-                    if (connection.From.Equals(other) || connection.To.Equals(other))
+                    if (connection.From.Equals(other) || connection.To.Equals(other)) {
                         known.Add(connection);
+                    }
                 }
             }
 
@@ -159,11 +161,13 @@ namespace MonoGraph
             {
                 foreach (Connection connection in GetIndirectConnections(entity))
                 {
-                    if (!indirect.Contains(connection.From))
+                    if (!indirect.Contains(connection.From)) {
                         indirect.Add(connection.From);
+                    }
 
-                    if (!indirect.Contains(connection.To))
+                    if (!indirect.Contains(connection.To)) {
                         indirect.Add(connection.To);
+                    }
                 }
             }
 
@@ -279,19 +283,22 @@ namespace MonoGraph
             foreach (KeyValuePair<Entity, IList<Connection>> item in this._graph)
             {
                 // skip the entity passed in
-                if (item.Key.Equals(entity))
+                if (item.Key.Equals(entity)) {
                     continue;
+                }
 
                 for (int i = 0; i < item.Value.Count; i++)
                 {
-                    if (item.Value[i].From.Equals(entity) || item.Value[i].To.Equals(entity))
+                    if (item.Value[i].From.Equals(entity) || item.Value[i].To.Equals(entity)) {
                         item.Value.RemoveAt(i);
+                    }
                 }
             }
 
             // remove the connections stored for this entity
-            if (complete)
+            if (complete) {
                 _graph.Remove(entity);
+            }
 
             return true;
         }
@@ -352,7 +359,9 @@ namespace MonoGraph
                     foreach (Relationship rel in connection.History)
                     {
                         if (rel.Equals(relationship))
+                        {
                             matches.Add(connection.To);
+                        }
                     }
                 }
             }
@@ -374,7 +383,9 @@ namespace MonoGraph
                     // if the source of the connection is the same as the entity it will not work and can be skipped
                     // i.e. an entity can't have relationship history with itself.
                     if (connection.From.Equals(entity))
+                    {
                         continue;
+                    }
 
                     // in each connection look through the relationship history
                     foreach (Relationship rel in connection.History)
@@ -383,7 +394,9 @@ namespace MonoGraph
                         // and the relationship matches
                         // and it hasn't already been catalogued - add it.
                         if (rel.Equals(relationship) && connection.To.Equals(entity) && !matches.Contains(connection.From))
+                        {
                             matches.Add(connection.From);
+                        }
                     }
                 }
             }
@@ -399,9 +412,13 @@ namespace MonoGraph
         public IList<Relationship> GetRelationshipHistory(Entity entity, Entity other)
         {
             if (EntityHasConnection(entity, entity, other))
+            {
                 return GetConnection(entity, other).Relationships;
+            }
             else
+            {
                 return new List<Relationship>();
+            }
         }
 
         public bool HaveRelationship(Entity entity, Entity other, Relationship relationship)
@@ -411,7 +428,9 @@ namespace MonoGraph
                 Connection connection = GetEntityConnection(entity, entity, other);
 
                 if (connection.Relationship.Equals(relationship))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -424,7 +443,9 @@ namespace MonoGraph
                 foreach (Relationship rel in GetConnection(entity, other).Relationships)
                 {
                     if (rel.Equals(relationship))
+                    {
                         return true;
+                    }
                 }
             }
 

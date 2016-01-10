@@ -39,8 +39,10 @@ public class GameController : MonoBehaviour
 
             // add connection to primary
             graph.AddDirectConnection(new Connection(c, primary, friendlyRelationship));
-            if(group != null)
+            if (group != null)
+            {
                 graph.AddDirectConnection(new Connection(c, group, memberRelationship));
+            }
         }
 
         for (int i = 0; i < 5; i++)
@@ -49,8 +51,10 @@ public class GameController : MonoBehaviour
             characters.Add(c);
 
             graph.AddDirectConnection(new Connection(c, primary, enemyRelationship));
-            if(group != null)
+            if (group != null)
+            {
                 graph.AddDirectConnection(new Connection(c, group, memberRelationship));
+            }
         }
 	}
 	
@@ -94,7 +98,9 @@ public class GameController : MonoBehaviour
             foreach (Entity e in enemies)
             {
                 if (e.GetComponent<StateScript>())
+                {
                     e.GetComponent<StateScript>().ChangeState(States.AGGRESSIVE);
+                }
             }
         }
         
@@ -104,7 +110,9 @@ public class GameController : MonoBehaviour
             foreach (Entity e in friends)
             {
                 if (e.GetComponent<StateScript>())
+                {
                     e.GetComponent<StateScript>().ChangeState(States.SUPPORTIVE);
+                }
             }
         }
     }

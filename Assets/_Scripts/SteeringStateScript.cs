@@ -62,12 +62,15 @@ public class SteeringStateScript : MonoBehaviour
             case BehaviourType.PURSUIT:
                 newColor = new Color(0.8f, 0.1f, 0.1f);
                 break;
+
             case BehaviourType.EVADE:
                 newColor = new Color(0.1f, 0.1f, 0.8f);
                 break;
+
             case BehaviourType.None:
                 newColor = new Color(0.8f, 0.8f, 0.8f);
                 break;
+
             default:
                 newColor = new Color(0.8f, 0.8f, 0.8f);
                 break;

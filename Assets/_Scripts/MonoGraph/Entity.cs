@@ -57,26 +57,31 @@ namespace MonoGraph
 
         public virtual bool Equals(Entity other)
         {
-            if (other == null)
+            if (other == null) {
                 return false;
+            }
 
-            if (this.EntityId == other.EntityId)
+            if (this.EntityId == other.EntityId) {
                 return true;
+            }
 
             return false;
         }
 
         public override bool Equals(object o)
         {
-            if (o == null)
+            if (o == null) {
                 return false;
+            }
 
             Entity entity = o as Entity;
 
-            if (entity == null)
+            if (entity == null) {
                 return false;
-            else
+            }
+            else {
                 return Equals(entity);
+            }
         }
 
         public override int GetHashCode()
@@ -131,9 +136,13 @@ namespace MonoGraph
                     Connection currentConnection = graph.GetEntityConnection(learnConnection.From, learnConnection);
 
                     if (currentConnection.Relationship.Equals(learnConnection.Relationship))
+                    {
                         MatchingConnection(learnConnection, currentConnection);
+                    }
                     else
+                    {
                         ConflictingConnection(learnConnection, currentConnection);
+                    }
                 }
                 else
                 {

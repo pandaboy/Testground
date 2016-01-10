@@ -41,13 +41,17 @@ public class SteeringBehaviours
     {
         vehicle = v;
         // retrieve the target from the vehicle settings
-        if(vehicle.target)
+        if (vehicle.target)
+        {
             target = vehicle.target.position;
+        }
 
         BehaviourType = vehicle.behaviourType;
-        
-        if(vehicle.other != null)
+
+        if (vehicle.other != null)
+        {
             otherVehicle = this.vehicle.other.GetComponent<Vehicle>();
+        }
 
         wanderTarget = Random.onUnitSphere * wanderRadius;
     }
@@ -90,37 +94,49 @@ public class SteeringBehaviours
         if(On(BehaviourType.SEEK))
         {
             if (!AccumulateForce(Seek(target)))
+            {
                 return steeringForce;
+            }
         }
 
         if (On(BehaviourType.FLEE))
         {
             if (!AccumulateForce(Flee(target)))
+            {
                 return steeringForce;
+            }
         }
 
         if (On(BehaviourType.ARRIVE))
         {
             if (!AccumulateForce(Arrive(target, Deceleration.MEDIUM)))
+            {
                 return steeringForce;
+            }
         }
 
         if(On(BehaviourType.PURSUIT))
         {
             if (!AccumulateForce(Pursuit(otherVehicle)))
+            {
                 return steeringForce;
+            }
         }
 
         if(On(BehaviourType.EVADE))
         {
             if (!AccumulateForce(Evade(otherVehicle)))
+            {
                 return steeringForce;
+            }
         }
 
         if(On(BehaviourType.WANDER))
         {
             if (!AccumulateForce(Wander()))
+            {
                 return steeringForce;
+            }
         }
 
         return steeringForce;
@@ -140,7 +156,9 @@ public class SteeringBehaviours
 
         // if we're far enough away, no reason to panic
         if ((vehicle.Position - targetPosition).sqrMagnitude > panicDistance)
+        {
             return Vector3.zero;
+        }
 
         Vector3 desiredV = (vehicle.Position - targetPosition).normalized * vehicle.maxSpeed;
 
@@ -254,15 +272,21 @@ public class SteeringBehaviours
         float magnitudeSoFar = steeringForce.magnitude;
         float magnitudeRemaining = vehicle.maxForce - magnitudeSoFar;
 
-        if(magnitudeRemaining <= 0.0)
+        if (magnitudeRemaining <= 0.0)
+        {
             return false;
+        }
 
         float magnitudeToAdd = forceToAdd.magnitude;
 
-        if(magnitudeToAdd < magnitudeRemaining)
+        if (magnitudeToAdd < magnitudeRemaining)
+        {
             steeringForce += forceToAdd;
+        }
         else
+        {
             steeringForce += forceToAdd.normalized * magnitudeRemaining;
+        }
 
         return true;
     }

@@ -1060,8 +1060,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 410830}
   - 95: {fileID: 9516862}
-  - 114: {fileID: 11450032}
   - 114: {fileID: 11425748}
+  - 114: {fileID: 11482698}
   m_Layer: 0
   m_Name: GuardGuy
   m_TagString: NPC
@@ -6172,7 +6172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EntityType: 0
---- !u!114 &11450032
+--- !u!114 &11482698
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -6184,6 +6184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 0}
+  message: 
   idleResponses:
   - '...'
   - '...hey?'

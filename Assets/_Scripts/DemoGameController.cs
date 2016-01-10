@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using MonoGraph;
 using RelationshipGraph.Relationships;
 
-public class Demo1GameController : MonoBehaviour
+public class DemoGameController : MonoBehaviour
 {
     // GameObjects we will use as our characters
     public GameObject otherCharacter;
@@ -19,7 +19,7 @@ public class Demo1GameController : MonoBehaviour
     private Relationship enemyR = new Relationship(RelationshipGraph.RelationshipType.ENEMY);
 
     // Use this for initialization
-    void Start()
+	void Start ()
     {
         // instantiate the main character
         mainCharacter = Instantiate(leadCharacter, new Vector3(50, 0.5f, -25), Quaternion.identity) as GameObject;
@@ -28,7 +28,7 @@ public class Demo1GameController : MonoBehaviour
         // create some random characters, make them enemies of the main characters
         otherCharacters = new List<GameObject>();
 
-        for (int i = 0; i < 200; i++)
+        for(int i = 0; i < 150; i++)
         {
             // instantiate a new character at a random location far from the mainCharacter
             GameObject ch = Instantiate(
@@ -42,10 +42,14 @@ public class Demo1GameController : MonoBehaviour
 
             // set half as friendly, half as enemies
             if (i % 2 == 0)
+            {
                 graph.AddDirectConnection(new Connection(ch, mainCharacter, enemyR));
+            }
             else
+            {
                 graph.AddDirectConnection(new Connection(ch, mainCharacter, friendlyR));
+            }
         }
 
-    }
+	}
 }
