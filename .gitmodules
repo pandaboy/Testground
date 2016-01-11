@@ -1,3 +1,7 @@
 [submodule "Assets/Scripts/RelationshipGraph"]
 	path = Assets/Scripts/RelationshipGraph
 	url = https://github.com/pandaboy/RelationshipGraph
+[submodule "Assets/_Scripts/RelationshipGraph"]
+	path = Assets/_Scripts/RelationshipGraph
+	url = https://github.com/pandaboy/RelationshipGraph
+	branch = develop
